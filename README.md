@@ -1,7 +1,7 @@
 # nodeRPG
 ## Description
 
-NodeRPG is a terminal based roleplaying game developed by [AltariasMainAccount](https://github.com/AltariasMainAccount) on github.
+NodeRPG is a terminal based roleplaying game developed by [AltariasMainAccount](https://github.com/AltariasMainAccount) on github. It is written in node.js *(duh)*
 
 ## Feature List
 ### Dungeons
