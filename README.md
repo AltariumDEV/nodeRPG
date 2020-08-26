@@ -50,7 +50,7 @@ As you might expect all of these rarities have specified drop chances from "**Al
 ## Known Issues
 ### The "Standalone Lua" Issue
 
-- The original projects was written in Lua (which is very limited in what it can do, even if the language that it is based on does not lack these features)
+- The original project was written in Lua (which is very limited in what it can do, even if the language that it is based on does not lack these features)
 - A major problem that was caused because of the Limitations of the old environment is frustrations caused by simple features that were simply missing from Lua
 - Many Parts of the code were just plain ugly and only existed for the purpose of simply working. This caused further problems with debugging
 
