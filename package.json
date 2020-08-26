@@ -1,0 +1,11 @@
+{
+  "name": "noderpg",
+  "version": "1.0.0",
+  "description": "A Terminal Based RPG Game in node.js",
+  "main": "game.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Altar",
+  "license": "ISC"
+}
