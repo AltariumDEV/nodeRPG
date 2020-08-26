@@ -47,8 +47,16 @@ Here is a rough overview of what to expect:
 
 As you might expect all of these rarities have specified drop chances from "**Almost guarranteed (~95%)**" to "**Pray to RNGsus (below 1%)**"
 
-## Known Issues
-### The "Standalone Lua" Issue
+## Roadmap
+
+1. Porting the existing code to the new programming language (so that I no longer have to fiddle with Lua for this project)
+2. Finishing the functionality of the ingame menu
+3. Start work on the games functionality (Dungeons)
+4. Start work on the games functionality (Inventory)
+5. Start work on the games functionality (Shops)
+
+
+## The "Standalone Lua" Issue
 
 - The original project was written in Lua (which is very limited in what it can do, even if the language that it is based on does not lack these features)
 - A major problem that was caused because of the Limitations of the old environment is frustrations caused by simple features that were simply missing from Lua
