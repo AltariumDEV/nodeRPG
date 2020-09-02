@@ -7,5 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Altar",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "terminal-kit": "^1.43.0"
+  }
 }
