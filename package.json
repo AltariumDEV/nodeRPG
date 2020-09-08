@@ -9,6 +9,10 @@
   "author": "Altar",
   "license": "ISC",
   "dependencies": {
-    "terminal-kit": "^1.43.0"
+    "key-events": "^0.1.1",
+    "user-input": "^1.5.1",
+    "user-input-keyboard": "^0.4.3",
+    "user-input-mapping": "^1.4.2",
+    "vkey": "^1.0.1"
   }
 }

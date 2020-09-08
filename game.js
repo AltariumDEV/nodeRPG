@@ -1,95 +1,92 @@
+// Asset File
+const asset = require('./poc.js');
+
 // Terminal Setup
-var term = require('terminal-kit').terminal;
+const readline = require('readline');
+readline.emitKeypressEvents(process.stdin);
+process.stdin.setRawMode(true);
 
-
-const assets = { 
+// Assets
+const assets = {
     "w": "█",
     "p": "Θ",
-    "g": " ",
-    "t": "+",
+    " ": " ",
+    "k": "+",
+    "t": "X",
+    
 }
 
-var playerPos = [1, 1];
+// Input Queue
+let inQueue = [];
+// Player Position
+let playerPos = [1, 1];
+let lastPos = playerPos;
+// Room Variables
+let room = [];
+room = asset.parseRoom(asset.room1);
 
-var room = [
-    ["w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"],
-    ["w","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","w"],
-    ["w","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","w"],
-    ["w","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","w"],
-    ["w","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","w"],
-    ["w","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","w"],
-    ["w","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","w"],
-    ["w","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","t","g","w"],
-    ["w","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","w"],
-    ["w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"]
-];
-
-function controlGame(playerPos, room) {
-    var escPressed = false;
-    while (escPressed === false) {
-        term.grabInput(true);
-        term.on( 'key', function( name, matches, data ) {
-            if (key === "UP") {
-                if (room[playerPos[0]][playerPos[1]+1] === "w") {
-                    return;
-                } else {
-                    playerPos[1] = playerPos[1]+1;
-                    renderRoom(room);
-                }
-            } else if (key === "DOWN") {
-                if (room[playerPos[0]][playerPos[1]-1] === "w") {
-                    return;
-                } else {
-                    playerPos[1] = playerPos[1]-1;
-                    renderRoom(room);
-                }   
-            } else if (key === "LEFT") {
-                if (room[playerPos[0]-1][playerPos[1]] === "w") {
-                    return;
-                } else {
-                    playerPos[0] = playerPos[0]-1;
-                    renderRoom(room);
-                }   
-            } else if (key === "RIGHT") {
-                if (room[playerPos[0]+1][playerPos[1]] === "w") {
-                    return;
-                } else {
-                    playerPos[0] = playerPos[0]+1;
-                    renderRoom(room);
-                }    
-            } else if (key === "ESCAPE") {
-                escPressed = true;
-            } else {
-                return;
-            }
-        });    
+// The Logic Behind the Movement 
+console.clear();
+renderRoom(room);
+process.stdin.on('keypress', (str, key) => {
+    if (key.ctrl && key.name === 'c') {
+        process.exit();
+    } else if (key.ctrl && key.name === 'z') {
+        inQueue = [];
+    } else {
+        inQueue.push(key);
     }
-}
+});
+// Interval for controls + queue
+setInterval( () => {
+    // Set variables for 
+    let key = inQueue.pop();
+    if (key === undefined) return;
+    lastPos = playerPos.slice();
+    let deltaX = 0;
+    let deltaY = 0;
+    if (key.name === 'w') {
+        deltaY = -1;
+    } else if (key.name === 'a') {
+        deltaX = -1;
+    } else if (key.name === 's') {
+        deltaY = 1
+    } else if (key.name === 'd') {
+        deltaX = 1;
+    }
+    if (room[playerPos[0] + deltaX][playerPos[1] + deltaY] === "w") {
+        return;
+    } else {
+        playerPos[0] += deltaX;
+        playerPos[1] += deltaY;
+    }
+    renderRoom(room);
+}, 150);
 
+// Optional Functions
 function renderRoom(arr) {
+    console.clear();
     var roomSize = size(arr)
     var roomSizeX = roomSize[0];
     var roomSizeY = roomSize[1];
+    room[lastPos[0]][lastPos[1]] = " ";
     room[playerPos[0]][playerPos[1]] = "p";
     var line = "";
-    for(var i = 0; i < roomSizeX; i++) {
-        for(var j = 0; j < roomSizeY; j++) {
-            line += assets[room[i][j]];
+    for (var y = 0; y < roomSizeY; y++) {
+        for (var x = 0; x < roomSizeX; x++) {
+            line += assets[room[x][y]];
         }
-        term.bold(line + "\n");
+        console.log(line);
         line = "";
     }
+    console.log("Current Position: " + playerPos);
+    console.log("Last Position: " + lastPos);
 }
 
-console.clear();
-renderRoom(room);
-controlGame(playerPos, room);
-
-// Optional Functions
-function size(arr){
+function size(arr) {
     var row_count = arr.length;
     var row_sizes = []
-    for(var i=0;i<row_count;i++){
+    for (var i = 0; i < row_count; i++) {
         row_sizes.push(arr[i].length)
     }
     return [row_count, Math.min.apply(null, row_sizes)]
