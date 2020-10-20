@@ -1,48 +1,43 @@
-/**
- * rparser - game functions
- * tclog - true color log
- * menu - menu stuff
- */
-const rparser = require('./gamelogic/roomParser.js');
-const tclog = require('./modules/true_color.js');
-const menu = require("./gamelogic/menuParsing.js");
-/** 
- * Terminal Setup
- * Making Sure Raw Input is enabled
- */ 
-const readline = require('readline');
+/*
+    NodeRPG - Main File (game.js)
+
+    Created By: Altarias
+    
+    Description: The main file of the NodeRPG project, this is the file you are supposed to start to get the game working.
+
+    Current Version: [ALPHA] 0.24_A
+    Changelog:
+        - Ordered more of the functions from the main file into subfiles for easier management. 
+        - Added Menu Rendering Features (See rendering/menuRender.js for more info)
+        - Put controls into a different file (See gamelogic/controls.js for more info)
+
+*/
+
+
+// Require readline to setup the raw input
+const readline = require ('readline');
+// Require things for the menu renderer
+const mr = require ('./rendering/menuRender');
+const mfa = require ('./rendering/menu_function_arrays');
+const mls = require ('./rendering/multi_line_strings');
+// Require things for the room renderer
+const rr = require ('./rendering/roomRender');
+
+// Setup Raw Inputs
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
-let currentState = "menu";
+// Room Number
+let roomNum = 0;
 
-/**
- * Variables for the game itself.
- */
 // Input Queue
 let inQueue = [];
-// Room Variables
-let roomNum = 0;
-let room = rparser.parseRoom(rparser.r[roomNum]);
-const player = rparser.dynamicObjects.find(o => o.type === "player");
-let deltaX = 0;
-let deltaY = 0;
-setPlayerSpawn();
 
-// The Logic Behind the Movement 
+let room = rr.parseRoom(mls.dungeons.d1[roomNum]);
+const player = rr.dynamicObjects.find(o => o.type === "player");
+rr.setPlayerSpawn();
 
-/**
- * Controls of the game/menu go here
- * Do not mix this up.
- */
-
-// Setup Terminal for input
 console.clear();
-if (currentState === "game") {
-    renderRoom();
-} else if (currentState === "menu") {
-    menu.renderMenu();
-}
 process.stdin.on('keypress', (str, key) => {
     if (key.ctrl && key.name === 'c') {
         process.exit();
@@ -53,95 +48,15 @@ process.stdin.on('keypress', (str, key) => {
     }
 });
 // Interval for controls + queue
-setInterval( () => {
-    let key = inQueue.pop();
-    if (key === undefined) return;
-    if (currentState === "menu") {
-        if (key.name === "up" && (!menuSelected === "0")) {
-            
-        } else if (key.name === "down" && (!menuSelected === "4")) {
-            
-        } else if (key.name === "return") {
-            
-        }
-    } else if (currentState === "game") {
-        // Set variables for 
-        if (key.name === 'w') {
-            deltaY = -1;
-        } else if (key.name === 'a') {
-            deltaX = -1;
-        } else if (key.name === 's') {
-            deltaY = 1
-        } else if (key.name === 'd') {
-            deltaX = 1;
-        }
-        if (room[player.xpos + deltaX][player.ypos + deltaY] === "w") {
-            return;
-        } else {
-            player.xpos += deltaX;
-            player.ypos += deltaY;
-        }
-        // TODO: check for keys, buttons, bombs, interactables, etc
-        if (room[player.xpos][player.ypos] === "e") {
-            roomNum = roomNum + 1;
-            room = rparser.parseRoom(rparser.r[roomNum]);
-            setPlayerSpawn();
-        }
-        renderRoom();
-    }
-}, 75);
+let nextKey;
 
-// Functionality
-function setPlayerSpawn() {
-    let canvas = deepcopy(room);
-    let roomSizeX, roomSizeY;
-    [roomSizeX, roomSizeY] = size(room)
-    for (var y = 0; y < roomSizeY; y++) {
-        for (var x = 0; x < roomSizeX; x++) {
-            if (canvas[x][y] === "s") {
-                [player.xpos, player.ypos] = [x, y];
-            }
-        }
-    }    
-}
-
-
-function renderRoom() {
-    // Setup Canvas (Backbuffer)
-    let canvas = deepcopy(room);
-    console.clear();
-    let roomSizeX, roomSizeY;
-    [roomSizeX, roomSizeY] = size(room)    
-    // Draw on Canvas
-    // reverse iterator without array copying
-    rparser.dynamicObjects.slice().reverse().forEach(obj => {
-        canvas[obj.xpos][obj.ypos] = obj.icon
-    });
-    // Render Canvas
-    var line = "";
-    for (var y = 0; y < roomSizeY; y++) {
-        for (var x = 0; x < roomSizeX; x++) {
-            if (rparser.iconMapping[canvas[x][y]] === undefined) {
-                line += canvas[x][y];
-            } else {
-                line += rparser.iconMapping[canvas[x][y]];
-            }
-        }
-        console.log(line);
-        line = "";
-    }
-    console.log("Current Position: ", player.xpos, player.ypos, " in Room: ", roomNum);
-}
-
-function size(arr) {
-    var row_count = arr.length;
-    var row_sizes = []
-    for (var i = 0; i < row_count; i++) {
-        row_sizes.push(arr[i].length)
-    }
-    return [row_count, Math.min.apply(null, row_sizes)]
-}
-
-function deepcopy(obj) {
-    return JSON.parse(JSON.stringify(obj));
+if (currentState === "menu") {
+    nextKey = inQueue.pop();
+    mr.processKey(key, main_menu, mfa.main_menu);
+} else if (currentState === "game") {
+    setInterval( () => {
+        nextKey = inQueue.pop();
+        if (key === undefined) return;
+        rr.processKey(key, room);
+    }, 75);
 }
