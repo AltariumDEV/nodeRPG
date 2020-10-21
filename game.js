@@ -27,17 +27,25 @@ const rr = require ('./rendering/roomRender');
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
+// Current GameState
+let currentState = "menu";
+
 // Room Number
 let roomNum = 0;
 
 // Input Queue
 let inQueue = [];
 
+// Menu Specific Things
+let main_menu = mr.createMenu(mls.menus.menu1);
+
+// Room Specific Things
 let room = rr.parseRoom(mls.dungeons.d1[roomNum]);
-const player = rr.dynamicObjects.find(o => o.type === "player");
-rr.setPlayerSpawn();
+const player = rr.dynamicObjectMap.find(o => o.type === "player");
+rr.setPlayerSpawn(room, player);
 
 console.clear();
+mr.preloadMenu(main_menu);
 process.stdin.on('keypress', (str, key) => {
     if (key.ctrl && key.name === 'c') {
         process.exit();
@@ -46,17 +54,20 @@ process.stdin.on('keypress', (str, key) => {
     } else {
         inQueue.push(key);
     }
+    main_process(key);
 });
 // Interval for controls + queue
 let nextKey;
 
-if (currentState === "menu") {
-    nextKey = inQueue.pop();
-    mr.processKey(key, main_menu, mfa.main_menu);
-} else if (currentState === "game") {
-    setInterval( () => {
+function main_process(nextKey) {
+    if (currentState === "menu") {
         nextKey = inQueue.pop();
-        if (key === undefined) return;
-        rr.processKey(key, room);
-    }, 75);
+        mr.processKey(nextKey, main_menu, mfa.main_menu);
+    } else if (currentState === "game") {
+        setInterval( () => {
+            nextKey = inQueue.pop();
+            if (nextKey === undefined) return;
+            rr.processKey(nextKey, room);
+        }, 75);
+    }
 }

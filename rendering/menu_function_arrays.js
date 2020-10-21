@@ -1,5 +1,5 @@
 module.exports = {
-    menu1: [
+    main_menu: [
         a1 = function() {
             console.log("Fancy First Function goes here");
         },        

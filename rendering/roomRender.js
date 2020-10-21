@@ -33,7 +33,10 @@ let dynamicObjects = [
 ]
 
 module.exports = {
+    iconMap: iconMapping,
+    dynamicObjectMap: dynamicObjects, 
     processKey: function(x, rArr) {
+        rRoom = rArr;
         switch(x.name) {
             case 'w':
                 deltaY = -1;
@@ -48,77 +51,75 @@ module.exports = {
                 deltaX = 1;
                 break;
         }
-        if (room[player.xpos + deltaX][player.ypos + deltaY] === "w") {
+        if (rRoom[player.xpos + deltaX][player.ypos + deltaY] === "w") {
             return;
         } else {
             player.xpos += deltaX;
             player.ypos += deltaY;
         }
-        if (room[player.xpos][player.ypos] === "e") {
+        if (rRoom[player.xpos][player.ypos] === "e") {
             roomNum = roomNum + 1;
-            room = parseRoom(rparser.r[roomNum]);
-            setPlayerSpawn();
+            rRoom = parseRoom(mls.dungeon.d1[roomNum]);
+            setPlayerSpawn(rRoom);
         }
-        rr.renderRoom();
+        rr.renderRoom(rRoom);
     },
-    setPlayerSpawn: function (arr) {
+    setPlayerSpawn: function(arr, player) {
         let canvas = exArr.deepcopy(arr);
         let roomSizeX, roomSizeY;
-        [roomSizeX, roomSizeY] = size(arr)
+        [roomSizeX, roomSizeY] = exArr.size(arr)
         for (var y = 0; y < roomSizeY; y++) {
             for (var x = 0; x < roomSizeX; x++) {
                 if (canvas[x][y] === "s") {
-                    [player.xpos, player.ypos] = [x, y];
+                    [player["xpos"], player["ypos"]] = [x, y];
                 }
             }
         }
     },
-    reverseObjOrder: function() {
-        dynamicObjects.reverse()
-    }
-}
-
-function parseRoom(roomStr) {
-    let lines = roomStr.split("\n");
-    lines.shift();
-    let temp;
-    let roomY = lines.length;
-    let roomX = Math.max(...lines.map(line => line.length));
-    let room = [];
-    for (let x = 0; x < roomX; x++) {
-        room.push([]);
-        for (let y = 0; y < roomY; y++) {
-            temp = Array.from(lines[y]);
-            room[x].push(temp[x]);
-            if (room[x][y] === undefined) room[x][y] = " ";
-        }
-    }
-    return room
-}
-
-function renderRoom(arr) {
-    // Setup Canvas (Backbuffer)
-    let canvas = exArr.deepcopy(arr);
-    console.clear();
-    let roomSizeX, roomSizeY;
-    [roomSizeX, roomSizeY] = exArr.size(arr);
-    // Draw on Canvas
-    // reverse iterator without array copying
-    rparser.dynamicObjects.slice().reverse().forEach(obj => {
-        canvas[obj.xpos][obj.ypos] = obj.icon;
-    });
-    // Render Canvas
-    var line = "";
-    for (var y = 0; y < roomSizeY; y++) {
-        for (var x = 0; x < roomSizeX; x++) {
-            if (rparser.iconMapping[canvas[x][y]] === undefined) {
-                line += canvas[x][y];
-            } else {
-                line += rparser.iconMapping[canvas[x][y]];
+    parseRoom: function(roomStr) {
+        let lines = roomStr.split("\n");
+        lines.shift();
+        let temp;
+        let roomY = lines.length;
+        let roomX = Math.max(...lines.map(line => line.length));
+        let room = [];
+        for (let x = 0; x < roomX; x++) {
+            room.push([]);
+            for (let y = 0; y < roomY; y++) {
+                temp = Array.from(lines[y]);
+                room[x].push(temp[x]);
+                if (room[x][y] === undefined) room[x][y] = " ";
             }
         }
-        console.log(line);
-        line = "";
+        return room
+    },
+    reverseObjOrder: function() {
+        dynamicObjects.reverse()
+    },
+    renderRoom: function(arr) {
+        // Setup Canvas (Backbuffer)
+        let canvas = exArr.deepcopy(arr);
+        console.clear();
+        let roomSizeX, roomSizeY;
+        [roomSizeX, roomSizeY] = exArr.size(arr);
+        // Draw on Canvas
+        // reverse iterator without array copying
+        rparser.dynamicObjects.slice().reverse().forEach(obj => {
+            canvas[obj.xpos][obj.ypos] = obj.icon;
+        });
+        // Render Canvas
+        var line = "";
+        for (var y = 0; y < roomSizeY; y++) {
+            for (var x = 0; x < roomSizeX; x++) {
+                if (rparser.iconMapping[canvas[x][y]] === undefined) {
+                    line += canvas[x][y];
+                } else {
+                    line += rparser.iconMapping[canvas[x][y]];
+                }
+            }
+            console.log(line);
+            line = "";
+        }
+        console.log("Current Position: ", dynamicObjects.player.xpos, dynamicObjects.player.ypos, " in Room: ", roomNum);
     }
-    console.log("Current Position: ", player.xpos, player.ypos, " in Room: ", roomNum);
 }

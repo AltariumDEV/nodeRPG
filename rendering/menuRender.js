@@ -59,6 +59,17 @@ module.exports = {
     },
     // Process Key Function
     // Allows you to process the raw input of Node.js into something that is actually slightly useful.
+    preloadMenu: function (array) {
+        pos = 0;
+        console.clear();
+        for(i = 0; i <= array.length - 1; i++) {
+            if(i == pos) {
+                console.log(selColor + "[>] " + array[i] + resetColor);
+            } else {
+                console.log(deselColor + "[ ] " + array[i] + resetColor);
+            }
+        }
+    },
     processKey: function (x, array, functions_arr) {
         switch(x.name) {
             case 'up':
