@@ -65,8 +65,7 @@ module.exports = {
         Create Menu Function
 
         Creates a basic structure for a menu, is nothing without the "processKey" function.
-    */
-    
+    */  
     createMenu: function (x, str) {
         // Create an array that takes a multi-line string, splits it on every newLine and prepares it for proper usage.
         let temp_arr = str.split("\n");
@@ -79,7 +78,11 @@ module.exports = {
         // Return the object that was previously created
         return obj;
     },
+    /*
+        Preload Menu Function
 
+        Allows you to preload the menu. (Used to invoke the menu before an input has been )
+    */
     preloadMenu: function (obj) {
         // Set the current position of your cursor to the first element of the given array
         pos = 0;
