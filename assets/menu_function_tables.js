@@ -1,7 +1,10 @@
+let globalVars = require("../environment/global_variables.js")
+let world_ui = require("../user_interaction/UI_world.js")
+
 module.exports = {
     m1_functions: [
         a = function() {
-            console.log("Default_Outcome_1");
+            globalVars.currentState = "world";
         },
         b = function() {
             console.log("Default_Outcome_2");

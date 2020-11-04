@@ -50,12 +50,17 @@ const func_menu = require ('./assets/menu_function_tables');
 let menu_1 = menu_ui.createMenu("NodeRPG [FIRST BETA TEST!]", a_menu.m1_texture);
 let menu_1_functions = func_menu.m1_functions;
 
+// Why not [BETA TEST OF UI_WORLD]
+
+let dungeon_1 = world_ui.generateDungeon("Dungeon 1", a_world.dungeons.d1[0], a_world.dungeons.d1[1], a_world.dungeons.d1[2]);
+
 // Runtime Variables
 
-let currentState = "menu";
+let globalVars = require("./environment/global_variables.js")
+let currentState = globalVars.currentState;
 let currentMenu = menu_1;
 let currentMenuFunctions = menu_1_functions;
-let worldMap;
+let currentWorldMap = dungeon_1;
 
 /*
     Program Code
@@ -67,8 +72,12 @@ let worldMap;
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
-// Preload the current menu
-menu_ui.preloadMenu(currentMenu);
+// Preload the current menu/current room
+if(currentState == "menu") {
+    menu_ui.preloadMenu(currentMenu);
+} else {
+    world_ui.preRenderMap(currentWorldMap);
+}
 // If the standard input receives a keypress event, do the following
 process.stdin.on('keypress', (str, key) => {
     if (key.ctrl && key.name === 'c') {
@@ -78,7 +87,8 @@ process.stdin.on('keypress', (str, key) => {
     } else {
         // If State = Menu - Do menu functions, Else if State = World - Do world functions, else throw error
         if (currentState == "menu") { menu_ui.processKey(key, currentMenu, currentMenuFunctions); }
-        else if (currentState == "world") { world_ui.processKey(key, worldMap); }
+        else if (currentState == "world") { world_ui.processInput(key, currentWorldMap); }
         else throw console.error("currentState does not match any accepted states.");
     }
+    currentState = globalVars.currentState;
 });
