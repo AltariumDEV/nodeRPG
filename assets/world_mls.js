@@ -69,6 +69,30 @@ w       s         d                                                             
 w                 w                                                                  w
 w                 w                                                                  w
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+`,
+r4 = `
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w                 w                                                                  w
+w                 w                                                                  w
+w       s         d                                                                  w
+w                 w                                                                  w
+w                 w                                                                  w
+wwwwwwwdddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwdddwwwwwwww
+w                 w                                                w                 w
+w                 w                                                w                 w
+w                 w                                                w                 w
+w                 w                                                w                 w
+w                 w                                                w                 w
+w                 w                                                w                 w
+w                 w                                                w                 w
+w                 w                                                w                 w
+wwwwwwwdddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwdddwwwwwwww
+w                 w                                                                  w
+w                 w                                                                  w
+w                 d                                                         e        w
+w                 w                                                                  w
+w                 w                                                                  w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 `
 ]
 }

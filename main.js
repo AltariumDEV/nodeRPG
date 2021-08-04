@@ -52,7 +52,7 @@ let menu_1_functions = func_menu.m1_functions;
 
 // Why not [BETA TEST OF UI_WORLD]
 
-let dungeon_1 = world_ui.generateDungeon("Dungeon 1", a_world.dungeons.d1[0], a_world.dungeons.d1[1], a_world.dungeons.d1[2]);
+let dungeon_1 = world_ui.generateDungeon("Dungeon 1", a_world.dungeons.d1[0], a_world.dungeons.d1[1], a_world.dungeons.d1[2], a_world.dungeons.d1[3]);
 
 // Runtime Variables
 
